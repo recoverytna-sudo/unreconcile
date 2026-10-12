@@ -79,10 +79,10 @@ module.exports = async (req, res) => {
         appendValues.push([timestamp, sheetDate, ou1, name, employeeId, customerName, customerId, invoiceArray[i], reason]);
       }
 
-      // Unreconciled Sheet သို့ သိမ်းဆည်းခြင်း (Error ဖြစ်စေသော Single Quotes များကို ဖြုတ်ထားပါသည်)
+      // Unreconciled Sheet သို့ သိမ်းဆည်းခြင်း (Tab နာမည် အမှန် "Unreconciled" ကို သုံးထားပါသည်)
       await sheets.spreadsheets.values.append({
         spreadsheetId: SHEET_ID_UNREC,
-        range: "Sheet1!A1", // <-- Single Quote များကို ဖြုတ်လိုက်ပါပြီ[cite: 3]
+        range: "Unreconciled!A1", // <-- Tab နာမည်အမှန်
         valueInputOption: 'USER_ENTERED',
         resource: { values: appendValues }
       });
