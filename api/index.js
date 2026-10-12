@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
 
     const sheets = google.sheets({ version: 'v4', auth });
     
-    // 🌟 ဤနေရာတွင် Unreconcile Sheet ၏ ID ကို သုံးပါမည်
+    // Unreconcile Sheet ၏ ID
     const SHEET_ID_UNREC = process.env.SHEET_ID_UNREC;
 
     if (req.method === 'POST') {
@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
         return jsonResponse(res, 200, { status: "error", message: "လိုအပ်သော Data များ ပြည့်စုံမှုမရှိပါ။" });
       }
 
-      // 🇲🇲 မြန်မာစံတော်ချိန် Timestamp ပြုလုပ်ခြင်း
+      // မြန်မာစံတော်ချိန် Timestamp ပြုလုပ်ခြင်း
       const now = new Date();
       const mmTime = new Date(now.getTime() + (6.5 * 60 * 60 * 1000));
       const month = mmTime.getUTCMonth() + 1;
@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
       const seconds = String(mmTime.getUTCSeconds()).padStart(2, '0');
       const timestamp = `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
 
-      // Date ကို 'YYYY-MM-DD' Format ဖြင့် ပြောင်းပေးခြင်း (Single Quote ခံခြင်း)
+      // Date ကို 'YYYY-MM-DD' Format ဖြင့် ပြောင်းပေးခြင်း
       let formattedDate = String(date).trim();
       const dateParts = formattedDate.split('-');
       if (dateParts.length === 3) {
@@ -79,10 +79,10 @@ module.exports = async (req, res) => {
         appendValues.push([timestamp, sheetDate, ou1, name, employeeId, customerName, customerId, invoiceArray[i], reason]);
       }
 
-      // Unreconciled Sheet သို့ သိမ်းဆည်းခြင်း (Tab နာမည်ကို Sheet1 ဟု ပုံသေထားပါသည်၊ လိုအပ်ပါက ပြင်နိုင်ပါသည်)
+      // Unreconciled Sheet သို့ သိမ်းဆည်းခြင်း (Error ဖြစ်စေသော Single Quotes များကို ဖြုတ်ထားပါသည်)
       await sheets.spreadsheets.values.append({
         spreadsheetId: SHEET_ID_UNREC,
-        range: "'Sheet1'!A1", // <-- သင့် Unreconcile Sheet ရဲ့ Tab နာမည်ကို ဒီမှာ ပြင်နိုင်ပါတယ်
+        range: "Sheet1!A1", // <-- Single Quote များကို ဖြုတ်လိုက်ပါပြီ[cite: 3]
         valueInputOption: 'USER_ENTERED',
         resource: { values: appendValues }
       });
